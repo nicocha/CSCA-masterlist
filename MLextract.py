@@ -202,7 +202,7 @@ if __name__ == "__main__":
     if len(sys.argv) != 2:
         print( "Invalid number of parameters: ")
         print( "" )
-        print( "Usage - python extract.py [masterlist ml file|icao ldif file]")
+        print( "Usage - python MLextract.py [masterlist .ml file|icao .ldif file]")
         print( "" )
         exit(1)
 
