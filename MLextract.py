@@ -51,7 +51,7 @@ def main(filename):
     for index, ml in enumerate(masterLists):
         certNr = 1
         print("-----------------------------------")
-        print(f"Verifying and extracting MasterList {index}")
+        print(f"Verifying and extracting MasterList {index + 1}/{len(masterLists)}")
         extractCertsFromMasterlist(ml)
 
     print("====================================")
@@ -123,9 +123,11 @@ def extractCertsFromMasterlist(masterList):
             (CN, err) = execute(f"{opensslbin} x509 -noout -issuer", c)
             certfilename = CN.decode("utf8").strip().replace("/", "-")
             i = 0
-            while os.path.exists("{certfilename}.pem"):
+            while os.path.exists(certfilename + ".pem"):
                 i += 1
-                certfilename = "{CN.decode('utf8').strip().replace('/', '-')-str(i)}"
+                certfilename = (
+                    CN.decode("utf8").strip().replace("/", "-") + "-" + str(i)
+                )
             with open(f"{certfilename}.pem", "wb") as certfile:
                 print(f"Saving certificate {certfilename}.pem", end="\r")
                 certfile.write(c)
@@ -135,7 +137,7 @@ def extractCertsFromMasterlist(masterList):
 
 def extractPEMCertificates(signedData):
     global certNr
-    print("Extracting all certificates from payload")
+    print("Extracting all certificates from masterlist")
     cmd = f"{opensslbin} asn1parse -inform der -i"
     (data, err) = execute(cmd, signedData)
 
@@ -183,7 +185,7 @@ def uniqueHash(cert):
         fingerprints.append(fingerprint)
         return True
 
-    # print( f"Found duplicate hash - {hash}")
+    print(f"Found duplicate hash - {hash}")
     return False
 
 
